@@ -11,7 +11,7 @@ export type ReasoningStep = {
   timestamp: string;
   title: string;
   description?: string;
-  type: "thought" | "action" | "observation" | "decision" | "tool_call";
+  type: "thought" | "action" | "observation" | "decision" | "tool_call" | "error";
   status: "pending" | "running" | "completed" | "error";
   metadata?: Record<string, any>;
 };

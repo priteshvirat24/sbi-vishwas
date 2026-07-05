@@ -6,8 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AgentExecutionGraph, GraphNode } from "@/components/ai/AgentExecutionGraph";
 import { ReasoningTimeline, ReasoningStep } from "@/components/ai/ReasoningTimeline";
 import { ArrowLeft, Play, UserCheck, ShieldAlert, FileText } from "lucide-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 // Mock data for the workflow visualization
 const mockNodes: GraphNode[] = [
@@ -72,15 +71,14 @@ const mockReasoning: ReasoningStep[] = [
 
 export default function WorkflowDetail() {
   const params = useParams();
+  const router = useRouter();
   
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" asChild>
-            <Link href="/workflows">
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
+          <Button variant="outline" size="icon" onClick={() => router.push('/workflows')}>
+            <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
             <div className="flex items-center gap-2">
