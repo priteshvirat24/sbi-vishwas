@@ -27,7 +27,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const navItems = [
   {
@@ -94,6 +94,7 @@ const navItems = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const router = useRouter();
 
   // Group items
   const groups = navItems.reduce((acc, item) => {
@@ -132,7 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuButton
                       isActive={pathname === item.url}
                       className="px-4 py-2 transition-colors hover:bg-muted"
-                      onClick={() => window.location.href = item.url}
+                      onClick={() => router.push(item.url)}
                     >
                       <item.icon className="h-4 w-4 mr-2" />
                       <span className="font-medium text-sm">{item.title}</span>

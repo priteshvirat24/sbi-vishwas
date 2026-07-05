@@ -30,17 +30,20 @@ class CBSAccountTool(BaseTool):
 
     async def arun(self, account_number: str) -> str:
         """Fetch account data via data factory simulation."""
-        # For simulation, we generate a consistent profile based on account length
-        is_dormant = len(account_number) % 2 == 0
-        data = cbs_data_factory.generate_complete_customer_data(force_dormant=is_dormant)
-        
-        # Override the generated account number with the requested one
-        data["account"]["account_number"] = account_number
-        
-        # Strip transactions for this specific tool to save tokens
-        del data["transaction_history"]
-        
-        return json.dumps(data, indent=2, default=str)
+        try:
+            # For simulation, we generate a consistent profile based on account length
+            is_dormant = len(account_number) % 2 == 0
+            data = cbs_data_factory.generate_complete_customer_data(force_dormant=is_dormant)
+            
+            # Override the generated account number with the requested one
+            data["account"]["account_number"] = account_number
+            
+            # Strip transactions for this specific tool to save tokens
+            del data["transaction_history"]
+            
+            return json.dumps(data, indent=2, default=str)
+        except Exception as e:
+            return f"Error executing CBS Account Query tool: {str(e)}"
 
 
 class CBSTransactionInput(BaseModel):
@@ -58,9 +61,12 @@ class CBSTransactionTool(BaseTool):
 
     async def arun(self, account_number: str, limit: int = 10) -> str:
         """Fetch transactions via data factory simulation."""
-        is_dormant = len(account_number) % 2 == 0
-        account = cbs_data_factory.generate_account(force_dormant=is_dormant)
-        transactions = cbs_data_factory.generate_transactions(account, count=limit)
-        
-        result = [t.model_dump(mode="json") for t in transactions]
-        return json.dumps(result, indent=2, default=str)
+        try:
+            is_dormant = len(account_number) % 2 == 0
+            account = cbs_data_factory.generate_account(force_dormant=is_dormant)
+            transactions = cbs_data_factory.generate_transactions(account, count=limit)
+            
+            result = [t.model_dump(mode="json") for t in transactions]
+            return json.dumps(result, indent=2, default=str)
+        except Exception as e:
+            return f"Error executing CBS Transaction Query tool: {str(e)}"

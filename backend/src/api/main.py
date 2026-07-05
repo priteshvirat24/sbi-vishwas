@@ -86,6 +86,10 @@ def create_app() -> FastAPI:
 
     # Request ID middleware
     app.add_middleware(RequestIDMiddleware)
+    
+    # Rate Limit middleware
+    if settings.rate_limit_enabled:
+        app.add_middleware(RateLimitMiddleware)
 
     # -------------------------------------------------------------------------
     # Exception handlers
@@ -160,3 +164,18 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         response.headers["X-Request-ID"] = request_id
         return response
+
+
+class RateLimitMiddleware(BaseHTTPMiddleware):
+    """Custom Rate Limiter stub."""
+
+    async def dispatch(self, request: Request, call_next):
+        # In a real implementation, connect to Redis and use settings.rate_limit_default
+        # For now, this is a stub that allows all requests through
+        settings = get_settings()
+        if not settings.rate_limit_enabled:
+            return await call_next(request)
+            
+        # Example Redis rate limit logic would go here
+        return await call_next(request)
+
